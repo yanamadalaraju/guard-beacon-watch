@@ -1,7 +1,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
-import { Icon } from 'leaflet';
+import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Guard, Location } from '@/types';
 import { cn } from '@/lib/utils';
@@ -30,15 +30,16 @@ const Map = ({
   showGeofencing = true,
 }: MapProps) => {
   const mapRef = useRef(null);
+  const [map, setMap] = useState<L.Map | null>(null);
 
-  const guardIcon = new Icon({
+  const guardIcon = new L.Icon({
     iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
   });
 
-  const locationIcon = new Icon({
+  const locationIcon = new L.Icon({
     iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
     iconSize: [25, 41],
     iconAnchor: [12, 41],
@@ -51,7 +52,7 @@ const Map = ({
         center={center}
         zoom={zoom}
         style={{ height: '100%', width: '100%' }}
-        ref={mapRef}
+        whenCreated={setMap}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -100,8 +101,8 @@ const Map = ({
             {showGeofencing && (
               <Circle
                 center={[location.lat, location.lng]}
-                radius={location.radius}
                 pathOptions={{ fillColor: 'blue', fillOpacity: 0.1, weight: 1, color: 'blue' }}
+                radius={location.radius}
               />
             )}
           </div>
