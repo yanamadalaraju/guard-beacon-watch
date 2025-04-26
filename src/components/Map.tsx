@@ -1,10 +1,18 @@
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Guard, Location } from '@/types';
 import { cn } from '@/lib/utils';
+
+// Fix Leaflet icon issues
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
+  iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
+});
 
 interface MapProps {
   guards?: Guard[];
@@ -29,8 +37,7 @@ const Map = ({
   showLocations = true,
   showGeofencing = true,
 }: MapProps) => {
-  const mapRef = useRef(null);
-  const [map, setMap] = useState<L.Map | null>(null);
+  const mapRef = useRef<L.Map | null>(null);
 
   const guardIcon = new L.Icon({
     iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
@@ -48,15 +55,15 @@ const Map = ({
 
   return (
     <div className={cn('rounded-lg overflow-hidden', className)} style={{ height }}>
-      <MapContainer
-        center={center}
-        zoom={zoom}
+      <MapContainer 
+        ref={mapRef}
+        center={center} 
+        zoom={zoom} 
         style={{ height: '100%', width: '100%' }}
-        whenCreated={setMap}
       >
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
         
         {showGuards && guards.map((guard) => (
