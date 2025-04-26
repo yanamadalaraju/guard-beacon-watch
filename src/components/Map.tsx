@@ -39,27 +39,32 @@ const Map = ({
 }: MapProps) => {
   const mapRef = useRef<L.Map | null>(null);
 
+  // Create custom icons for markers
   const guardIcon = new L.Icon({
     iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+    shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
+    shadowSize: [41, 41]
   });
 
   const locationIcon = new L.Icon({
     iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+    shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
+    shadowSize: [41, 41]
   });
 
   return (
     <div className={cn('rounded-lg overflow-hidden', className)} style={{ height }}>
-      <MapContainer 
-        ref={mapRef}
-        center={center} 
-        zoom={zoom} 
+      <MapContainer
+        center={center}
+        zoom={zoom}
         style={{ height: '100%', width: '100%' }}
+        ref={(map) => { mapRef.current = map; }}
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -71,6 +76,7 @@ const Map = ({
             <Marker
               key={guard.id}
               position={[guard.currentLocation.lat, guard.currentLocation.lng]}
+              // Pass icon as JSX attribute properly
               icon={guardIcon}
             >
               <Popup>
@@ -90,6 +96,7 @@ const Map = ({
           <div key={location.id}>
             <Marker
               position={[location.lat, location.lng]}
+              // Pass icon as JSX attribute properly
               icon={locationIcon}
             >
               <Popup>
@@ -108,8 +115,14 @@ const Map = ({
             {showGeofencing && (
               <Circle
                 center={[location.lat, location.lng]}
-                pathOptions={{ fillColor: 'blue', fillOpacity: 0.1, weight: 1, color: 'blue' }}
-                radius={location.radius}
+                // Fix: radius should be defined as a number
+                pathOptions={{
+                  fillColor: 'blue',
+                  fillOpacity: 0.1,
+                  weight: 1,
+                  color: 'blue',
+                  radius: location.radius
+                }}
               />
             )}
           </div>
