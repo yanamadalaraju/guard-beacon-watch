@@ -76,7 +76,6 @@ const Map = ({
             <Marker
               key={guard.id}
               position={[guard.currentLocation.lat, guard.currentLocation.lng]}
-              // Pass icon as JSX attribute properly
               icon={guardIcon}
             >
               <Popup>
@@ -96,7 +95,6 @@ const Map = ({
           <div key={location.id}>
             <Marker
               position={[location.lat, location.lng]}
-              // Pass icon as JSX attribute properly
               icon={locationIcon}
             >
               <Popup>
@@ -115,14 +113,13 @@ const Map = ({
             {showGeofencing && (
               <Circle
                 center={[location.lat, location.lng]}
-                // Fix: radius should be defined as a number
                 pathOptions={{
                   fillColor: 'blue',
                   fillOpacity: 0.1,
                   weight: 1,
-                  color: 'blue',
-                  radius: location.radius
+                  color: 'blue'
                 }}
+                radius={location.radius}
               />
             )}
           </div>
