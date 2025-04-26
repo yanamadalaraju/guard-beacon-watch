@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,7 +9,7 @@ import TaskCard from "@/components/TaskCard";
 import AlertItem from "@/components/AlertItem";
 import { guards, locations, tasks, alerts } from "@/data/mockData";
 import { Alert, Guard, Task } from "@/types";
-import { MapPin, CheckCircle, BellAlert, CheckSquare, Clock } from "lucide-react";
+import { MapPin, CheckCircle, AlertTriangle, CheckSquare, Clock } from "lucide-react";
 import Navbar from "@/components/Navbar";
 
 const Dashboard = () => {
@@ -19,13 +18,8 @@ const Dashboard = () => {
   const [activeAlerts, setActiveAlerts] = useState<Alert[]>([]);
   
   useEffect(() => {
-    // Filter active guards
     setActiveGuards(guards.filter(g => g.status === 'active' || g.status === 'on-break'));
-    
-    // Filter active tasks
     setActiveTasks(tasks.filter(t => t.status === 'assigned' || t.status === 'in-progress'));
-    
-    // Filter active alerts
     setActiveAlerts(alerts.filter(a => a.status === 'active'));
   }, []);
   
@@ -57,7 +51,7 @@ const Dashboard = () => {
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold">Dashboard</h1>
           <Button onClick={() => alert("SOS Alert Triggered!")} variant="destructive">
-            <BellAlert className="h-4 w-4 mr-2" /> SOS Alert
+            <AlertTriangle className="h-4 w-4 mr-2" /> SOS Alert
           </Button>
         </div>
         
@@ -125,7 +119,7 @@ const Dashboard = () => {
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-lg flex items-center">
-                <BellAlert className="h-5 w-5 mr-2 text-primary" />
+                <AlertTriangle className="h-5 w-5 mr-2 text-primary" />
                 Alerts
               </CardTitle>
             </CardHeader>
@@ -205,7 +199,7 @@ const Dashboard = () => {
                       <span>Tasks</span>
                     </TabsTrigger>
                     <TabsTrigger value="alerts" className="flex items-center">
-                      <BellAlert className="h-4 w-4 mr-2" />
+                      <AlertTriangle className="h-4 w-4 mr-2" />
                       <span>Alerts</span>
                     </TabsTrigger>
                   </TabsList>
